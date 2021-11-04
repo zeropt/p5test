@@ -1,0 +1,9 @@
+/* style.css */
+
+body {
+    font-family: "Lucida Console";
+    color: white;
+    background-color: gray;
+    margin: 0;
+    overflow: hidden;
+}
