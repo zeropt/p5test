@@ -4,18 +4,22 @@
  * License: Public Domain
  */
 
-let anchor_x, anchor_y;
+let anchor_x, anchor_y, x, y;
+kp = 0.05;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
     anchor_x = width/2;
     anchor_y = height/2;
+    x = width/2;
+    y = height/2;
 }
 
 function draw() {
     background(128);
-    drawBalloonTest(anchor_x, anchor_y, 
-        (mouseX - anchor_x)/2 + anchor_x, (mouseY - anchor_y)/2 + anchor_y);
+    x += kp * (mouseX - x);
+    y += kp * (mouseY - y);
+    drawBalloonTest(anchor_x, anchor_y, x, y);
 }
 
 function windowResized() {
