@@ -6,6 +6,7 @@
 
  var canvas;
  var button;
+ var success;
 
 /* runs on script startup */
 function setup() {
@@ -19,7 +20,9 @@ function setup() {
         p: createVector(width/2, height/2),
         v: createVector(0, 0)
     };
-    //button.element.mouseClicked(onClick);
+    button.element.mouseClicked(onClick);
+
+    success = false;
 }
 
 /* runs on window resize */
@@ -27,23 +30,36 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 
+/* runs on button click */
+function onClick() {
+    success = true;
+}
+
 /* runs in a loop */
 function draw() {
-    background(0);
+    if (success) {
+        background(255);
+        button.element.remove();
+    } else {
+        background(0);
 
-    //calculate acceleration
-    var a = createVector(
-        button.p.x - mouseX, button.p.y - mouseY);
-    var r = a.mag();
-    if (r < button.element.size().width) {
-        tpButton();
-        return;
+        //calculate acceleration
+        var a = createVector(
+            button.p.x - mouseX, button.p.y - mouseY);
+        var r = a.mag();
+        if (r < sqrt(
+            (button.element.size().width**2)/4 + 
+            (button.element.size().height**2)/4)
+            ) {
+            tpButton();
+            return;
+        }
+        a.setMag(100/r);
+
+        //update the button position
+        button.v.add(a);
+        updateButton();
     }
-    a.setMag(100/r);
-
-    //update the button position
-    button.v.add(a);
-    updateButton();
 }
 
 function updateButton() {
