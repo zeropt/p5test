@@ -4,35 +4,92 @@
  * License: Public Domain
  */
 
-let anchor_x, anchor_y, x, y;
-kp = 0.05;
+ var canvas;
+ var button;
 
+/* runs on script startup */
 function setup() {
-    createCanvas(windowWidth, windowHeight);
-    anchor_x = width/2;
-    anchor_y = height/2;
-    x = width/2;
-    y = height/2;
+    // The Canvas!!!
+    canvas = createCanvas(windowWidth, windowHeight);
+    canvas.position(0, 0); //move canvas to origin
+
+    // Initialize button element
+    button = {
+        element: select("#my-button"),
+        p: createVector(width/2, height/2),
+        v: createVector(0, 0)
+    };
+    //button.element.mouseClicked(onClick);
 }
 
-function draw() {
-    background(128);
-    x += kp * (mouseX - x);
-    y += kp * (mouseY - y);
-    drawBalloonTest(anchor_x, anchor_y, x, y);
-}
-
+/* runs on window resize */
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
-    anchor_x = width/2;
-    anchor_y = height/2;
 }
 
-function drawBalloonTest(x1, y1, x2, y2) {
-    strokeWeight(4);
-    stroke(255);
-    line(x1, y1, x2, y2);
-    noStroke();
-    fill(255);
-    ellipse(x2, y2, 60, 60);
+/* runs in a loop */
+function draw() {
+    background(0);
+
+    //calculate acceleration
+    var a = createVector(
+        button.p.x - mouseX, button.p.y - mouseY);
+    var r = a.mag();
+    if (r < button.element.size().width) {
+        tpButton();
+        return;
+    }
+    a.setMag(100/r);
+
+    //update the button position
+    button.v.add(a);
+    updateButton();
+}
+
+function updateButton() {
+    buttonW = button.element.size().width;
+    buttonH = button.element.size().height;
+
+    //constrain the button to the window
+    if (button.p.x <= buttonW/2) {
+        button.p.x = buttonW/2;
+        if (button.v.x < 0) {
+            button.v.x = 0;
+        }
+    } else if (button.p.x >= width - buttonW/2) {
+        button.p.x = width - buttonW/2;
+        if (button.v.x > 0) {
+            button.v.x = 0;
+        }
+    }
+    if (button.p.y <= buttonH/2) {
+        button.p.y = buttonH/2;
+        if (button.v.y < 0) {
+            button.v.y = 0;
+        }
+    } else if (button.p.y >= height - buttonH/2) {
+        button.p.y = height - buttonH/2;
+        if (button.v.y > 0) {
+            button.v.y = 0;
+        }
+    }
+
+    //update
+    button.p.add(button.v);
+    buttonX = button.p.x - button.element.size().width/2;
+    buttonY = button.p.y - button.element.size().height/2;
+    button.element.position(buttonX, buttonY);
+}
+
+function tpButton() {
+    buttonW = button.element.size().width;
+    buttonH = button.element.size().height;
+    
+    //teleport to a new position
+    newX = random(buttonW/2, width - buttonW/2);
+    newY = random(buttonH/2, height - buttonH/2);
+    button.p.set(newX, newY);
+
+    //set the velocity to zero
+    button.v.set(0, 0);
 }

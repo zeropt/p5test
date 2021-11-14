@@ -9,8 +9,6 @@ body {
 }
 
 .p5Canvas {
-    position: absolute;
-    top: 0px;
-    left: 0px;
+    /* Move canvas to the back */
     z-index: -1;
 }
