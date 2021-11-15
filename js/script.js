@@ -47,13 +47,14 @@ function draw() {
         var a = createVector(
             button.p.x - mouseX, button.p.y - mouseY);
         var r = a.mag();
-        if (r < sqrt(
+        if (r < 10) r = 10; //bound r >= 10px; 
+        /*if (r < sqrt(
             (button.element.size().width**2)/4 + 
             (button.element.size().height**2)/4)
             ) {
             tpButton();
             return;
-        }
+        }*/
         a.setMag(100/r);
 
         //update the button position
@@ -67,28 +68,22 @@ function updateButton() {
     buttonH = button.element.size().height;
 
     //constrain the button to the window
-    if (button.p.x <= buttonW/2) {
-        button.p.x = buttonW/2;
-        if (button.v.x < 0) {
-            button.v.x = 0;
-        }
-    } else if (button.p.x >= width - buttonW/2) {
+    /*if (button.p.x <= buttonW/2) {
         button.p.x = width - buttonW/2;
-        if (button.v.x > 0) {
-            button.v.x = 0;
-        }
+    } else if (button.p.x >= width - buttonW/2) {
+        button.p.x = buttonW/2;
     }
     if (button.p.y <= buttonH/2) {
-        button.p.y = buttonH/2;
-        if (button.v.y < 0) {
-            button.v.y = 0;
-        }
-    } else if (button.p.y >= height - buttonH/2) {
         button.p.y = height - buttonH/2;
-        if (button.v.y > 0) {
-            button.v.y = 0;
-        }
+    } else if (button.p.y >= height - buttonH/2) {
+        button.p.y = buttonH/2;
+    }*/
+
+    if ((button.p.x <= buttonW/2) || (button.p.x >= width - buttonW/2) || 
+        (button.p.y <= buttonH/2) || (button.p.y >= height - buttonH/2)) {
+        tpButton();
     }
+
 
     //update
     button.p.add(button.v);
